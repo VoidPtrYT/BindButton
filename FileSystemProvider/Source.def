@@ -1,0 +1,5 @@
+LIBRARY
+EXPORTS
+Serialize=Serialize
+Deserialize=Deserialize
+IsFileEdit=IsFileEdit

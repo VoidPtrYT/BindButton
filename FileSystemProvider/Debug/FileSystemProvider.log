@@ -1,0 +1,6 @@
+﻿  stdafx.cpp
+  dllmain.cpp
+  FileSystemProvider.cpp
+     Создается библиотека D:\BindButton\BindButton\Debug\FileSystemProvider.lib и объект D:\BindButton\BindButton\Debug\FileSystemProvider.exp
+  FileSystemProvider.vcxproj -> D:\BindButton\BindButton\Debug\FileSystemProvider.dll
+  FileSystemProvider.vcxproj -> D:\BindButton\BindButton\Debug\FileSystemProvider.pdb (Full PDB)
