@@ -1,0 +1,13 @@
+﻿  stdafx.cpp
+  BindHandler.cpp
+  DllProvider.cpp
+DllProvider.cpp(81): warning C4800: BOOL: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+DllProvider.cpp(82): warning C4800: BOOL: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+DllProvider.cpp(83): warning C4800: BOOL: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+DllProvider.cpp(84): warning C4800: BOOL: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+  Parser.cpp
+  Создание кода
+  All 121 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Создание кода завершено
+  BindHandler.vcxproj -> D:\BindButton\BindButton\Release\BindHandler.exe
+  BindHandler.vcxproj -> D:\BindButton\BindButton\Release\BindHandler.pdb (Full PDB)

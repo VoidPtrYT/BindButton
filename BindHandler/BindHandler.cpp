@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Pair.h"
 #include "DllProvider.h"
+#include "Parser.h"
 #include <string>
 
 //g(get) id
@@ -22,6 +23,7 @@ void ShowErrorLoadDLL(void);
 int main(int argc, char** args)
 {
 	std::boolalpha(std::wcout);
+	Parser p(argc, args);
 	try
 	{
 		if (argc == 1)
@@ -55,15 +57,19 @@ int main(int argc, char** args)
 			Help();
 			break;
 		case 'g':
-			//TODO: make for this functions
+			p.Get();
 			break;
 		case 's':
+			p.Set();
 			break;
 		case 'e':
+			p.Edit();
 			break;
 		case 'r':
+			p.Remove();
 			break;
 		case 'l':
+			p.List();
 			break;
 		}
 	}

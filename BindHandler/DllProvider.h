@@ -32,7 +32,7 @@ public:
 	bool Deserialize(void);
 
 	void get(size_t id) const;
-	void set(const LPARAM* pLparam, BOOL isCaps, BOOL isShift, BOOL isAlt, BOOL isControl, LPCWSTR strParam);
+	void set(const LPARAM* pLparam, size_t cntParams, BOOL isCaps, BOOL isShift, BOOL isAlt, BOOL isControl, LPCWSTR strParam);
 	void edit(size_t id, LPCWSTR strParam);
 	void remove(size_t id);
 	void list(void) const;
