@@ -1,3 +1,7 @@
-﻿  Parser.cpp
+﻿  DllProvider.cpp
+d:\bindbutton\bindbutton\bindhandler\dllprovider.cpp(81): warning C4800: BOOL: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+d:\bindbutton\bindbutton\bindhandler\dllprovider.cpp(82): warning C4800: BOOL: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+d:\bindbutton\bindbutton\bindhandler\dllprovider.cpp(83): warning C4800: BOOL: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
+d:\bindbutton\bindbutton\bindhandler\dllprovider.cpp(84): warning C4800: BOOL: принудительно задано логическое значение "true" или "false" (предупреждение о производительности)
   BindHandler.vcxproj -> D:\BindButton\BindButton\Debug\BindHandler.exe
   BindHandler.vcxproj -> D:\BindButton\BindButton\Debug\BindHandler.pdb (Full PDB)

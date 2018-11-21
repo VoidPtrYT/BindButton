@@ -1,19 +1,6 @@
 #include "stdafx.h"
 #include "Parser.h"
 
-int Parser::ParseBool(char* str)
-{
-	if (strlen(str) != 1)
-		return -1;
-
-	if (str[0] == '1' || str[0] == 't' || str[0] == 'y')
-		return 1;
-	if (str[0] == '0' || str[0] == 'f' || str[0] == 'n')
-		return 0;
-
-	return -1;
-}
-
 void Parser::Get(void) const
 {
 	if (this->argc != 3)
@@ -35,29 +22,65 @@ void Parser::Get(void) const
 
 void Parser::Set(void) const
 {
-	if (this->argc < 7)
+
+	if (this->argc < 8)
 	{
 		std::wcout << L"Error of count of params! This variant must have this params:" << std::endl;
 		std::wcout << L"\t-s <id button> <isCaps> <isShift> <isControl> <isAlt> <command> - add\nbind" << std::endl;
 		std::wcout << L"You can add more than one button. Separate codes by space" << std::endl;
 		return;
 	}
-	size_t cntParams = this->argc - 6;
-	LPARAM* arr = (LPARAM*)calloc(cntParams, sizeof(LPARAM));
+	size_t cntParams = this->argc - 7;
+	std::auto_ptr<LPARAM> arr(new LPARAM[cntParams]);
 	for (size_t i = 0; i < cntParams; ++i)
 	{
 		int id = atoi(this->args[2 + i]);
 		if (id == 0 && this->args[2 + i][0] != '0')
 		{
 			std::wcout << L"Incorrect param of id button! Value must be integer!" << std::endl;
-			free(arr);
 			return;
 		}
-		arr[i] = (LPARAM)id;
+		arr.get()[i] = (LPARAM)id;
 	}
 
-	int array[4] = { 0 };
-	this->ParseBool(this->args[this->argc - 5]); // Çהוסü מרטבךא?!
+	std::auto_ptr<int> pArr(new int[1 << 2]);
+
+	int(*pFn)(const char*) = [](const char* str) 
+	{
+		if (strlen(str) != 1)
+			return -1;
+
+		if (str[0] == '1' || str[0] == 't' || str[0] == 'y')
+			return 1;
+		if (str[0] == '0' || str[0] == 'f' || str[0] == 'n')
+			return 0;
+
+		return -1; 
+	};
+	for (size_t i = 0; i < 1 << 2; ++i)
+	{
+		pArr.get()[i] = pFn(this->args[this->argc - 5 + i]);
+		if (pArr.get()[i] == -1)
+		{
+			std::wcout << L"Incorrect logical param!" << std::endl;
+			std::wcout << L"Params must be 0, f or n - for false, 1, t or y - for true" << std::endl;
+			return;
+		}
+	}
+	if (!strlen(this->args[this->argc - 1]))
+	{
+		std::wcout << L"Empty string of params! Bind don't added" << std::endl;
+		return;
+	}
+
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+	DllProvider::getInstance()->set(arr.get(),
+		cntParams,
+		pArr.get()[0],
+		pArr.get()[1],
+		pArr.get()[2],
+		pArr.get()[3],
+		(conv.from_bytes(this->args[this->argc - 1]).c_str()));
 }
 
 void Parser::Edit(void) const

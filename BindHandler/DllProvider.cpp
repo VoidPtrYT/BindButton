@@ -129,7 +129,7 @@ void DllProvider::set(const LPARAM* pLparam, size_t cntParams, BOOL isCaps, BOOL
 	p.isAlt = isAlt;
 	p.isControl = isControl;
 	p.strParams = (LPWSTR)calloc(wcslen(strParam) + 1, sizeof(WCHAR));
-	wcscpy_s(p.strParams, wcslen(strParam), strParam);
+	memcpy_s(p.strParams, p.sizeArr * sizeof(wchar_t), strParam, wcslen(strParam) * sizeof(wchar_t));
 }
 
 void DllProvider::edit(size_t id, LPCWSTR strParam)
@@ -187,7 +187,6 @@ void DllProvider::list(void) const
 
 DllProvider::~DllProvider(void)
 {
-	this->Serialize();
 	if (!this->hDll ||
 		this->hDll != INVALID_HANDLE_VALUE)
 		FreeLibrary(this->hDll);

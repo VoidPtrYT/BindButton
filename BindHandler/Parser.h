@@ -3,13 +3,12 @@
 #include <locale>
 #include <codecvt>
 #include <string>
+#include <memory>
 
 class Parser
 {
 	int argc = 0;
 	char** args = nullptr;
-
-	int ParseBool(char* str);
 
 public:
 	Parser() = delete;

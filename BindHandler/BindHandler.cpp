@@ -61,12 +61,15 @@ int main(int argc, char** args)
 			break;
 		case 's':
 			p.Set();
+			DllProvider::getInstance()->Serialize();
 			break;
 		case 'e':
 			p.Edit();
+			DllProvider::getInstance()->Serialize();
 			break;
 		case 'r':
 			p.Remove();
+			DllProvider::getInstance()->Serialize();
 			break;
 		case 'l':
 			p.List();
