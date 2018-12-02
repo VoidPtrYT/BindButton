@@ -40,48 +40,32 @@ BOOL EXPORT Serialize(const PPAIR pairArr, DWORD size)
 
 	DWORD iCountWrited = 0;
 	if (!WriteFile(hFile, &size, sizeof(DWORD), &iCountWrited, NULL))
-	{
-		CloseHandle(hFile);
-		return FALSE;
-	}
+		goto err;
 	for (DWORD i = 0; i < size; ++i)
 	{
-		LPBYTE data = NULL;
-		DWORD sizeBuffer = 0;
-		sizeBuffer += sizeof(DWORD);
-		sizeBuffer += sizeof(DWORD) * pairArr[i].sizeArr;
-		sizeBuffer += 4 * sizeof(BOOL);
-		sizeBuffer += wcslen(pairArr[i].strParams) * sizeof(WCHAR);
-		data = (LPBYTE)calloc(sizeBuffer, sizeof(BYTE));
-		DWORD iIndex = 0;
-
-		memcpy(data + iIndex, &pairArr[i].sizeArr, sizeof(DWORD));
-		iIndex += sizeof(DWORD);
-
-		memcpy(data + iIndex, pairArr[i].arr, sizeof(DWORD) * pairArr[i].sizeArr);
-		iIndex += sizeof(DWORD) * pairArr[i].sizeArr;
-
-		ByteData bd;
+		if (!WriteFile(hFile, &pairArr[i].sizeArr, sizeof(DWORD), &iCountWrited, NULL))
+			goto err;
+		if (!WriteFile(hFile, pairArr[i].arr, sizeof(DWORD)*pairArr[i].sizeArr, &iCountWrited, NULL))
+			goto err;
+		ByteData bd = { 0 };
 		bd.arr[0] = pairArr[i].isCaps;
 		bd.arr[1] = pairArr[i].isShift;
 		bd.arr[2] = pairArr[i].isControl;
 		bd.arr[3] = pairArr[i].isAlt;
-		memcpy(data + iIndex, &bd, sizeof(INT32));
-		iIndex += sizeof(INT32);
-
-		memcpy(data + iIndex, pairArr[i].strParams, wcslen(pairArr[i].strParams) * sizeof(WCHAR));
-
-		if (!WriteFile(hFile, data, sizeBuffer, &iCountWrited, NULL) || iCountWrited != sizeBuffer)
-		{
-			free(data);
-			CloseHandle(hFile);
-			return FALSE;
-		}
-		free(data);
+		if (!WriteFile(hFile, &bd, sizeof(ByteData), &iCountWrited, NULL))
+			goto err;
+		DWORD sizeStr = wcslen(pairArr[i].strParams);
+		if (!WriteFile(hFile, &sizeStr, sizeof(DWORD), &iCountWrited, NULL))
+			goto err;
+		if (!WriteFile(hFile, pairArr[i].strParams, sizeStr * sizeof(WCHAR), &iCountWrited, NULL))
+			goto err;
 	}
 
 	CloseHandle(hFile);
 	return TRUE;
+err:
+	CloseHandle(hFile);
+	return FALSE;
 }
 BOOL EXPORT Deserialize(PPAIR pairArr, LPDWORD size)
 {
@@ -92,7 +76,7 @@ BOOL EXPORT Deserialize(PPAIR pairArr, LPDWORD size)
 			free(pairArr[i].arr);
 			free(pairArr[i].strParams);
 		}
-		size = 0;
+		*size = 0;
 		free(pairArr);
 	}
 
@@ -108,10 +92,7 @@ BOOL EXPORT Deserialize(PPAIR pairArr, LPDWORD size)
 
 	DWORD iCountReaded = 0;
 	if (!ReadFile(hFile, size, sizeof(DWORD), &iCountReaded, NULL))
-	{
-		CloseHandle(hFile);
-		return FALSE;
-	}
+		goto err;
 	pairArr = (PPAIR)calloc(*size, sizeof(Pair));
 	for (DWORD i = 0; i < *size; ++i)
 	{
@@ -120,7 +101,7 @@ BOOL EXPORT Deserialize(PPAIR pairArr, LPDWORD size)
 		pairArr[i].arr = (LPDWORD)calloc(pairArr[i].sizeArr, sizeof(DWORD));
 		if (!ReadFile(hFile, pairArr[i].arr, sizeof(DWORD) * pairArr[i].sizeArr, &iCountReaded, NULL) || iCountReaded != sizeof(DWORD) * pairArr[i].sizeArr)
 			goto err;
-		ByteData bd;
+		ByteData bd = { 0 };
 		if (!ReadFile(hFile, &bd, sizeof(ByteData), &iCountReaded, NULL) || iCountReaded != sizeof(ByteData))
 			goto err;
 		pairArr[i].isCaps = bd.arr[0];

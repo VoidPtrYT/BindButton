@@ -16,6 +16,7 @@ DllProvider::DllProvider()
 
 	if (!this->serialize || !this->deserialize)
 		this->isBad = true;
+	this->Deserialize();
 }
 
 void DllProvider::ListEmptyMessage(void) const
@@ -46,7 +47,7 @@ bool DllProvider::IsError(size_t index) const
 DllProvider* DllProvider::getInstance(void)
 {
 	if (!DllProvider::instance)
-		DllProvider::instance = new DllProvider;
+		DllProvider::instance = new DllProvider();
 
 	return DllProvider::instance;
 }
@@ -64,9 +65,9 @@ bool DllProvider::Serialize(void) const
 bool DllProvider::Deserialize(void)
 {
 	return reinterpret_cast
-		<BOOL(*)(PPAIR, DWORD)>
+		<BOOL(*)(PPAIR, LPDWORD)>
 		(this->deserialize)
-		(this->pairs, this->sizePairs) == TRUE;
+		(this->pairs, (LPDWORD)&this->sizePairs) == TRUE;
 }
 
 void DllProvider::get(size_t id) const
@@ -129,7 +130,8 @@ void DllProvider::set(const LPARAM* pLparam, size_t cntParams, BOOL isCaps, BOOL
 	p.isAlt = isAlt;
 	p.isControl = isControl;
 	p.strParams = (LPWSTR)calloc(wcslen(strParam) + 1, sizeof(WCHAR));
-	memcpy_s(p.strParams, p.sizeArr * sizeof(wchar_t), strParam, wcslen(strParam) * sizeof(wchar_t));
+	memcpy_s(p.strParams, wcslen(strParam) * sizeof(wchar_t), strParam, wcslen(strParam) * sizeof(wchar_t));
+	this->Serialize();
 }
 
 void DllProvider::edit(size_t id, LPCWSTR strParam)
