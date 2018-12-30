@@ -72,6 +72,8 @@ bool DllProvider::Deserialize(void)
 
 void DllProvider::get(size_t id) const
 {
+
+
 	if (!this->IsError(id))
 		return;
 	std::wcout << L"LPARAM: " << std::endl;
